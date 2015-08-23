@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import indexer
 
 def get_page(url):
     try:
@@ -32,26 +33,21 @@ def get_all_links(page):
             break
     return links
 
-def crawl_web(seed, max_depth):
+def crawl_web(seed):
     tocrawl = [seed]
     crawled = []
-    next_depth = []
-    depth = 0
+    index = []
     
-    while tocrawl and depth <= max_depth:
+    while tocrawl:
         page = tocrawl.pop()
-        
+        content = get_page(page)
+        indexer.add_page_to_index(index, page, content)
         if page not in crawled:
-            union(next_depth, get_all_links(get_page(page)))
+            union(tocrawl, get_all_links(content))
             crawled.append(page)
-            
-        if not tocrawl:      
-            tocrawl = next_depth
-            next_depth = []
-            depth += 1
                
-    return crawled    
+    return index    
 
-#print(crawl_web('https://www.udacity.com/cs101x/index.html', 4))
-#print(crawl_web('http://xkcd.com/554', 3))
-print(crawl_web("http://xkcd.com/353", 2))
+print(crawl_web('https://www.udacity.com/cs101x/index.html'))
+#print(crawl_web('http://xkcd.com/554'))
+#print(crawl_web("http://xkcd.com/353"))
