@@ -24,6 +24,11 @@ def add_page_to_index(index,url,content):
     for key in keyword:
         add_to_index(index,key,url)
         
+def lookup(index, keyword):
+    for entry in index:
+        if entry[0] == keyword:
+            return entry[1]
+    return None
 
 if __name__ == '__main__':
     add_page_to_index(index,'fake.text',"This is a test")
