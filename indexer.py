@@ -13,11 +13,12 @@ index = []
 
 
 def add_to_index(index,keyword,url):
-    for entry in index:
-        if entry[0] == keyword:
-            entry[1].append(url)
-            return
-    index.append([keyword,[url]])
+    if keyword in index:
+        index[keyword].append(url)
+    else:
+        # not found, add new keyword to index 
+        index[keyword] = [url]
+
 
 def add_page_to_index(index,url,content):
     keyword = content.split()
@@ -25,9 +26,8 @@ def add_page_to_index(index,url,content):
         add_to_index(index,key,url)
         
 def lookup(index, keyword):
-    for entry in index:
-        if entry[0] == keyword:
-            return entry[1]
+    if keyword in index:
+        return index[keyword]
     return None
 
 if __name__ == '__main__':

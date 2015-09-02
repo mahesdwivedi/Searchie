@@ -36,7 +36,7 @@ def get_all_links(page):
 def crawl_web(seed):
     tocrawl = [seed]
     crawled = []
-    index = []
+    index = {}
     
     while tocrawl:
         page = tocrawl.pop()
@@ -48,6 +48,7 @@ def crawl_web(seed):
                
     return index    
 
-print(crawl_web('https://www.udacity.com/cs101x/index.html'))
-#print(crawl_web('http://xkcd.com/554'))
+index = crawl_web('https://www.udacity.com/cs101x/index.html')
+#index = crawl_web('http://xkcd.com/554')
 #print(crawl_web("http://xkcd.com/353"))
+print(indexer.lookup( index, 'a' ))
