@@ -1,16 +1,4 @@
-# add_page_to_index, takes three inputs:
-
-#   - index
-#   - url (String)
-#   - content (String)
-
-# It updates the index to include
-# all of the word occurences found in the
-# page content by adding the url to the
-# word's associated url list.
-
 index = []
-
 
 def add_to_index(index,keyword,url):
     if keyword in index:
@@ -30,9 +18,28 @@ def lookup(index, keyword):
         return index[keyword]
     return None
 
+def lookup_best(index, ranks, keyword):
+	if keyword in index:
+		newindex = index[keyword][:]
+		index[keyword] = []
+
+		while newindex:
+			largest = 0.0
+			largestIndex = None
+			
+			for i in range(0,len(newindex)):
+				if ranks[newindex[i]] > largest:
+					largest = ranks[newindex[i]]
+					largestIndex = i
+			
+			if largestIndex != None:
+				index[keyword].append(newindex.pop(largestIndex))
+		
+		return index[keyword]
+	return None
+
+
 if __name__ == '__main__':
     add_page_to_index(index,'fake.text',"This is a test")
     add_page_to_index(index,'real.text',"This is not a test")
     print(index)
-
-
