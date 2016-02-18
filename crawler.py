@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import indexer
+import indexer, ranks
 
 def get_page(url):
     try:
@@ -34,21 +34,33 @@ def get_all_links(page):
     return links
 
 def crawl_web(seed):
-    tocrawl = [seed]
-    crawled = []
-    index = {}
-    
-    while tocrawl:
-        page = tocrawl.pop()
-        content = get_page(page)
-        indexer.add_page_to_index(index, page, content)
-        if page not in crawled:
-            union(tocrawl, get_all_links(content))
-            crawled.append(page)
+	tocrawl = [seed]
+	crawled = []
+	graph = {} #<url>:[list of pages it links to]
+	index = {}
+	while tocrawl:
+		page = tocrawl.pop()
+		if page not in crawled:
+			content = get_page(page)
+			indexer.add_page_to_index(index, page, content)
+			outlinks = get_all_links(content)
+			graph[page] = outlinks
+			union(tocrawl, outlinks)
+			crawled.append(page)
+			#print(crawled)
                
-    return index    
+	return index, graph    
 
-index = crawl_web('https://www.udacity.com/cs101x/index.html')
-#index = crawl_web('http://xkcd.com/554')
-#print(crawl_web("http://xkcd.com/353"))
-print(indexer.lookup( index, 'a' ))
+
+if __name__ == '__main__':
+	index , graph = crawl_web('http://udacity.com/cs101x/urank/index.html')
+	#print(index)
+	#print(graph)
+	
+	rank = ranks.compute_ranks(graph)
+	#print(rank)
+	
+	#print(indexer.lookup(index, "hummus"))
+	query = indexer.lookup_best(index, rank, "Hummus")
+	for items in query:
+		print(items)
